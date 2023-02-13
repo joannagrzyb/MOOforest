@@ -10,6 +10,7 @@ from imblearn.metrics import specificity_score
 
 from sklearn.metrics import balanced_accuracy_score, f1_score, precision_score, recall_score
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.base import clone
@@ -21,8 +22,8 @@ import math
 
 
 # Calculate geometric_mean_score based on Precision and Recall
-def geometric_mean_score_pr(precision, recall):
-    return math.sqrt(precision*recall)
+def geometric_mean_score_pr(recall, precision):
+    return math.sqrt(recall*precision)
 
 """
 Datasets are from KEEL repository.
@@ -30,10 +31,18 @@ Datasets are from KEEL repository.
 
 base_estimator = DecisionTreeClassifier(random_state=1234)
 methods = {
-    "MOOforest":
+    "MOOforest_promethee":
         MOOforest(base_classifier=base_estimator, n_classifiers=15, n_gen=200, pareto_decision="promethee" ,criteria_weights=np.array([0.5, 0.5])),
+    "MOOforest_recall":
+        MOOforest(base_classifier=base_estimator, n_classifiers=15, n_gen=200, pareto_decision="recall"),
+    "MOOforest_precision":
+        MOOforest(base_classifier=base_estimator, n_classifiers=15, n_gen=200, pareto_decision="precision"),
     "DT":
         DecisionTreeClassifier(random_state=1234),
+    "RF":
+        RandomForestClassifier(n_estimators=15, bootstrap=False, random_state=1234),
+    "RF_b":
+        RandomForestClassifier(n_estimators=15, bootstrap=True, random_state=1234),
 }
 
 # Repeated Stratified K-Fold cross validator

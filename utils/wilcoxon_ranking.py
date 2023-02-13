@@ -164,7 +164,6 @@ def pairs_metrics_multi_line(method_names, data_np, experiment_name, dataset_pat
     fig.subplots_adjust(wspace=0.6, hspace=0.2)
     
     fig.suptitle(method_names[0], fontsize=22, x=0.5, y=1.3)
-    # fig.suptitle("DE-Forest with constraints", fontsize=22, x=0.5, y=1.3)
 
     # --------------------------------------
     # Init/clear ranks

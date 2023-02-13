@@ -67,7 +67,7 @@ class Optimization(ElementwiseProblem):
                     metrics = [0, 0]
                     return metrics
             y_pred = self.predict(X_test, selected_features, ensemble)
-            metrics = [precision_score(y_test, y_pred), recall_score(y_test, y_pred)]
+            metrics = [precision_score(y_test, y_pred, average="weighted"), recall_score(y_test, y_pred, average="weighted")]
             metrics_folds.append(metrics)
         mean_score = np.mean(metrics_folds, axis=0)
         std = np.std(metrics_folds, axis=0)

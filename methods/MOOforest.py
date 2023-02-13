@@ -60,6 +60,9 @@ class MOOforest(BaseEstimator):
         if self.pareto_decision == 'recall':
             index = np.argmin(self.solutions[:, 1], axis=0)
             features_for_ensemble = res.X[index]
+        elif self.pareto_decision == 'precision':
+            index = np.argmin(self.solutions[:, 0], axis=0)
+            features_for_ensemble = res.X[index]
         elif self.pareto_decision == 'promethee':
             # if only one solution has been found
             if self.solutions.shape[0] == 1:
