@@ -14,6 +14,12 @@ from utils.datasets_table_description import calc_imbalance_ratio
 
 base_estimator = DecisionTreeClassifier(random_state=1234)
 methods = {
+    # "MOOforest_promethee":
+    #     MOOforest(base_classifier=base_estimator, n_classifiers=15, n_gen=200, pareto_decision="promethee" ,criteria_weights=np.array([0.5, 0.5])),
+    # "MOOforest_recall":
+    #     MOOforest(base_classifier=base_estimator, n_classifiers=15, n_gen=200, pareto_decision="recall"),
+    # "MOOforest_precision":
+    #     MOOforest(base_classifier=base_estimator, n_classifiers=15, n_gen=200, pareto_decision="precision"),
     "MOOforest":
         MOOforest(base_classifier=base_estimator, n_classifiers=15, n_gen=200, pareto_decision="promethee" ,criteria_weights=np.array([0.5, 0.5])),
     "DT":
@@ -40,8 +46,8 @@ metrics_alias = [
     "Precision",
     "Gmean"]
 
-DATASETS_DIR = "datasets/"
-# DATASETS_DIR = "datasets_36/"
+# DATASETS_DIR = "datasets/"
+DATASETS_DIR = "datasets_36/"
 dataset_paths = []
 dataset_names = []
 imbalance_ratios = []
@@ -111,7 +117,8 @@ for dataset_id, dataset_path in enumerate(dataset_paths):
         #     print("Error loading time data!", dataset_name, clf_name)
 
 # All datasets with description in the table
-# make_description_table(DATASETS_DIR)
+# wewnątrz tej funkcji jest trochę źle zrobiony folder
+make_description_table(DATASETS_DIR)
 
 experiment_name = "experiment1"
 # Results in form of one .tex table of each metric
@@ -130,4 +137,6 @@ experiment_name = "experiment1"
 # result_tables_for_time(dataset_names, imbalance_ratios, sum_times, methods, experiment_name)
 
 # Plot scatter with all methods
-scatter_plot(datasets=dataset_names, n_folds=n_folds, experiment_name=experiment_name, methods=methods, raw_data=data_np)
+# scatter_plot(datasets=dataset_names, n_folds=n_folds, experiment_name=experiment_name, methods=methods, raw_data=data_np)
+
+# Results from 13_02_23 are the final results

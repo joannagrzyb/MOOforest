@@ -268,11 +268,11 @@ def scatter_plot(datasets, n_folds, experiment_name, methods, raw_data):
                 # RF_b
                 plt.scatter(raw_data[dataset_id, 4, 3, fold_id], raw_data[dataset_id, 3, 3, fold_id], color='tab:orange', marker="v", label="RF_b")
                 # DE_Forest
-                plt.scatter(raw_data[dataset_id, 4, 4, fold_id], raw_data[dataset_id, 3, 4, fold_id], color='tab:blue', marker="+", label="RS")
+                plt.scatter(raw_data[dataset_id, 4, 4, fold_id], raw_data[dataset_id, 3, 4, fold_id], color='tab:blue', marker="+", label="DE_Forest")
                 # RandomFS
-                plt.scatter(raw_data[dataset_id, 4, 5, fold_id], raw_data[dataset_id, 3, 5, fold_id], color='tab:red', marker="^", label="SVM")
+                plt.scatter(raw_data[dataset_id, 4, 5, fold_id], raw_data[dataset_id, 3, 5, fold_id], color='tab:red', marker="^", label="RandomFS")
                 # RandomFS_b
-                plt.scatter(raw_data[dataset_id, 4, 6, fold_id], raw_data[dataset_id, 3, 6, fold_id], color='tab:purple', marker="<", label="FS")
+                plt.scatter(raw_data[dataset_id, 4, 6, fold_id], raw_data[dataset_id, 3, 6, fold_id], color='tab:purple', marker="<", label="RandomFS_b")
 
                 # plt.title("Objective Space", fontsize=12)
                 plt.xlabel('Precision', fontsize=12)
