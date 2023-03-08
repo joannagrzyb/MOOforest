@@ -11,8 +11,10 @@ from utils.utils_diversity import calc_diversity_measures
 
 
 class MOOforest(BaseEstimator):
-    def __init__(self, base_classifier, n_classifiers=10, predict_decision="MV", n_gen=100, pareto_decision="promethee", criteria_weights=None):
+    def __init__(self, base_classifier, criterion1, criterion2, n_classifiers=10, predict_decision="MV", n_gen=100, pareto_decision="promethee", criteria_weights=None):
         self.base_classifier = base_classifier
+        self.criterion1 = criterion1
+        self.criterion2 = criterion2
         self.n_classifiers = n_classifiers
         self.selected_features = []
         self.n_gen = n_gen
@@ -22,6 +24,7 @@ class MOOforest(BaseEstimator):
 
     def partial_fit(self, X, y, classes=None):
         self.X, self.y = X, y
+
         # Check classes
         self.classes_ = classes
         if self.classes_ is None:
@@ -29,7 +32,7 @@ class MOOforest(BaseEstimator):
         n_features = X.shape[1]
 
         # Create optimization problem
-        problem = Optimization(X, y, estimator=self.base_classifier, n_classifiers=self.n_classifiers, n_features=n_features)
+        problem = Optimization(X, y, estimator=self.base_classifier, criterion1=self.criterion1, criterion2=self.criterion2, n_classifiers=self.n_classifiers, n_features=n_features)
         
         # 2 - oznacza liczbę M, czyli liczba kryteriów
         ref_dirs = get_reference_directions("das-dennis", 2, n_partitions=50)
@@ -94,26 +97,6 @@ class MOOforest(BaseEstimator):
             # Add candidate to the ensemble
             self.ensemble.append(candidate)
 
-        # Pruning based on balanced_accuracy_score
-        # if self.pruning:
-        #     bac_array = []
-        #     for sf, clf in zip(self.selected_features, self.ensemble):
-        #         y_pred = clf.predict(X[:, sf])
-        #         bac = balanced_accuracy_score(y, y_pred)
-        #         bac_array.append(bac)
-        #     bac_arg_sorted = np.argsort(bac_array)
-        #     self.ensemble_arr = np.array(self.ensemble)
-        #     # The percent of deleted models, ex. 0.3 from 10 models = 30 % models will be deleted
-        #     pruned = 0.3
-        #     pruned_indx = int(pruned * len(self.ensemble))
-        #     selected_models = bac_arg_sorted[pruned_indx:]
-        #     self.ensemble_arr = self.ensemble_arr[selected_models]
-        #     self.ensemble = self.ensemble_arr.tolist()
-
-        #     selected_features_list = [sf.tolist() for sf in self.selected_features]
-        #     selected_features_arr = np.array(selected_features_list)
-        #     self.selected_features = selected_features_arr[selected_models, :]
-
         return self
 
     def fit(self, X, y, classes=None):
@@ -139,21 +122,6 @@ class MOOforest(BaseEstimator):
     def predict_proba(self, X):
         probas_ = [clf.predict_proba(X) for clf in self.ensemble]
         return np.average(probas_, axis=0)
-
-    # def calculate_diversity(self):
-    #     '''
-    #     entropy_measure_e: E varies between 0 and 1, where 0 indicates no difference and 1 indicates the highest possible diversity.
-    #     kw - Kohavi-Wolpert variance
-    #     Q-statistic: <-1, 1>
-    #     Q = 0 statistically independent classifiers
-    #     Q < 0 classifiers commit errors on different objects
-    #     Q > 0 classifiers recognize the same objects correctly
-    #     '''
-    #     if len(self.ensemble) > 1:
-    #         # All measures for whole ensemble
-    #         self.entropy_measure_e, self.k0, self.kw, self.disagreement_measure, self.q_statistic_mean = calc_diversity_measures(self.X, self.y, self.ensemble, self.selected_features, p=0.01)
-
-    #         return(self.entropy_measure_e, self.kw, self.disagreement_measure, self.q_statistic_mean)
 
 
     # Calculation uni weighted to promethee method

@@ -9,10 +9,12 @@ from pymoo.core.problem import ElementwiseProblem
 
 
 class Optimization(ElementwiseProblem):
-    def __init__(self, X, y, estimator, n_features, n_classifiers=10, **kwargs):
+    def __init__(self, X, y, estimator, criterion1, criterion2, n_features, n_classifiers=10, **kwargs):
         self.X = X
         self.y = y
         self.estimator = estimator
+        self.criterion1 = criterion1
+        self.criterion2 = criterion2
         self.n_features = n_features
         self.n_classifiers = n_classifiers
         self.classes_, _ = np.unique(self.y, return_inverse=True)
@@ -68,8 +70,8 @@ class Optimization(ElementwiseProblem):
                     metrics = [0, 0]
                     return metrics
             y_pred = self.predict(X_test, selected_features, ensemble)
-            metrics = [precision_score(y_test, y_pred), recall_score(y_test, y_pred)]
-            # metrics = [specificity_score(y_test, y_pred), recall_score(y_test, y_pred)]
+            # metrics = [precision_score(y_test, y_pred), recall_score(y_test, y_pred)]
+            metrics = [self.criterion1(y_test, y_pred), self.criterion2(y_test, y_pred)]
             metrics_folds.append(metrics)
         mean_score = np.mean(metrics_folds, axis=0)
         std = np.std(metrics_folds, axis=0)

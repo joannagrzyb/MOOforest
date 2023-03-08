@@ -31,12 +31,10 @@ Datasets are from KEEL repository.
 
 base_estimator = DecisionTreeClassifier(random_state=1234)
 methods = {
-    "MOOforest_promethee":
-        MOOforest(base_classifier=base_estimator, n_classifiers=15, n_gen=200, pareto_decision="promethee" ,criteria_weights=np.array([0.5, 0.5])),
-    "MOOforest_recall":
-        MOOforest(base_classifier=base_estimator, n_classifiers=15, n_gen=200, pareto_decision="recall"),
-    "MOOforest_precision":
-        MOOforest(base_classifier=base_estimator, n_classifiers=15, n_gen=200, pareto_decision="precision"),
+    "MOOforest_promethee_precision_recall":
+        MOOforest(base_classifier=base_estimator, criterion1=precision_score, criterion2=recall_score, n_classifiers=15, n_gen=200, pareto_decision="promethee" ,criteria_weights=np.array([0.5, 0.5])),
+    "MOOforest_promethee_spec_recall":
+        MOOforest(base_classifier=base_estimator, criterion1=specificity_score, criterion2=recall_score, n_classifiers=15, n_gen=200, pareto_decision="promethee" ,criteria_weights=np.array([0.5, 0.5])),
     "DT":
         DecisionTreeClassifier(random_state=1234),
     "RF":
@@ -51,7 +49,7 @@ n_repeats = 5
 rskf = RepeatedStratifiedKFold(n_splits=n_splits, n_repeats=n_repeats, random_state=111)
 n_folds = n_splits * n_repeats
 
-DATASETS_DIR = "datasets/"
+DATASETS_DIR = "datasets_60/"
 # DATASETS_DIR = "datasets_test/"
 dataset_paths = []
 for root, _, files in os.walk(DATASETS_DIR):
@@ -91,6 +89,7 @@ def compute(dataset_id, dataset_path):
 
         X, y = load_dataset(dataset_path)
         # Normalization - transform data to [0, 1]
+
         X = MinMaxScaler().fit_transform(X, y)
         scores = np.zeros((len(metrics), len(methods), n_folds))
         pareto_solutions = np.zeros((len(methods), n_folds, n_rows_p, 2))
