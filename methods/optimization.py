@@ -4,6 +4,7 @@ from scipy.stats import mode
 from sklearn.base import clone
 from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.metrics import precision_score, recall_score
+from imblearn.metrics import specificity_score
 from pymoo.core.problem import ElementwiseProblem
 
 
@@ -67,7 +68,8 @@ class Optimization(ElementwiseProblem):
                     metrics = [0, 0]
                     return metrics
             y_pred = self.predict(X_test, selected_features, ensemble)
-            metrics = [precision_score(y_test, y_pred, average="weighted"), recall_score(y_test, y_pred, average="weighted")]
+            metrics = [precision_score(y_test, y_pred), recall_score(y_test, y_pred)]
+            # metrics = [specificity_score(y_test, y_pred), recall_score(y_test, y_pred)]
             metrics_folds.append(metrics)
         mean_score = np.mean(metrics_folds, axis=0)
         std = np.std(metrics_folds, axis=0)

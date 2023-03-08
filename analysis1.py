@@ -140,3 +140,4 @@ experiment_name = "experiment1"
 # scatter_plot(datasets=dataset_names, n_folds=n_folds, experiment_name=experiment_name, methods=methods, raw_data=data_np)
 
 # Results from 13_02_23 are the final results
+# Results from 22_02_23 are bad, because metrics (Precision and Recall) has wrong parameter: average="weighted", it should be only binary
